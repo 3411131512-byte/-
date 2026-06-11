@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>RadDaily｜影英日计划</title>
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#f9a8d4" />
+
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="RadDaily" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      background: linear-gradient(135deg, #fff1f7, #eef2ff, #ecfeff);
+      color: #333;
+      min-height: 100vh;
+      padding: 18px;
+    }
+
+    .app {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 28px;
+      padding: 26px;
+      box-shadow: 0 12px 28px rgba(130, 130, 190, 0.18);
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .title-box h1 {
+      font-size: 34px;
+      color: #7c3aed;
+      margin-bottom: 8px;
+    }
+
+    .title-box p {
+      color: #666;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .top-info {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .info-card {
+      background: linear-gradient(135deg, #ffe4f1, #e0f2fe);
+      padding: 16px 20px;
+      border-radius: 22px;
+      min-width: 150px;
+      text-align: center;
+      box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.75);
+    }
+
+    .info-card .big {
+      font-size: 25px;
+      font-weight: bold;
+      color: #ec4899;
+      margin-bottom: 4px;
+    }
+
+    .info-card .small {
+      color: #555;
+      font-size: 13px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 22px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 26px;
+      padding: 22px;
+      box-shadow: 0 12px 28px rgba(130, 130, 190, 0.14);
+      margin-bottom: 22px;
+    }
+
+    .card h2 {
+      color: #5b5bd6;
+      font-size: 21px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .focus-card {
+      background: linear-gradient(135deg, #fff7ed, #fdf2f8);
+      border: 2px solid rgba(255, 183, 197, 0.5);
+    }
+
+    .focus-title {
+      font-size: 25px;
+      font-weight: bold;
+      color: #f97316;
+      margin-bottom: 10px;
+    }
+
+    .focus-desc {
+      line-height: 1.8;
+      color: #555;
+    }
+
+    .task-list {
+      list-style: none;
+    }
+
+    .task-item {
+      background: #f8f7ff;
+      margin-bottom: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 12px;
+      transition: 0.25s;
+    }
+
+    .task-item:hover {
+      background: #f1efff;
+      transform: translateY(-2px);
+    }
+
+    .task-item.done .task-title {
+      text-decoration: line-through;
+      color: #999;
+    }
+
+    input[type="checkbox"] {
+      width: 21px;
+      height: 21px;
+      cursor: pointer;
+      accent-color: #8b5cf6;
+    }
+
+    .task-main {
+      min-width: 0;
+    }
+
+    .task-title {
+      font-weight: bold;
+      color: #444;
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+
+    .task-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 12px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #ede9fe;
+      color: #6d28d9;
+    }
+
+    .coin-badge {
+      background: #fef3c7;
+      color: #b45309;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .progress-box {
+      margin-top: 18px;
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 14px;
+      background: #eee;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #8b5cf6, #ec4899);
+      border-radius: 99px;
+      transition: 0.35s;
+    }
+
+    .reset-btn {
+      border: none;
+      background: #ef4444;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 14px;
+      cursor: pointer;
+      margin-top: 14px;
+      transition: 0.2s;
+    }
+
+    .reset-btn:hover {
+      background: #dc2626;
+    }
+
+    .knowledge-box {
+      background: #f8fbff;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 16px;
+      border-left: 6px solid #8b5cf6;
+    }
+
+    .knowledge-box h3 {
+      color: #6d5dfc;
+      margin-bottom: 8px;
+    }
+
+    .knowledge-box p {
+      color: #555;
+      line-height: 1.8;
+    }
+
+    .vocab-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 16px;
+      margin-top: 10px;
+    }
+
+    .vocab-table th,
+    .vocab-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    .vocab-table th {
+      background: #ede9fe;
+      color: #5b21b6;
+    }
+
+    .vocab-table td {
+      background: #fff;
+    }
+
+    .pets {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .pet-card {
+      background: linear-gradient(135deg, #fffafc, #fff7ed);
+      border-radius: 24px;
+      padding: 18px 14px;
+      cursor: pointer;
+      transition: 0.25s;
+      border: 2px solid rgba(255, 192, 203, 0.45);
+      box-shadow: 0 8px 20px rgba(255, 182, 193, 0.15);
+      position: relative;
+    }
+
+    .pet-card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 14px 24px rgba(255, 105, 180, 0.2);
+    }
+
+    .kitty {
+      position: relative;
+      width: 120px;
+      height: 112px;
+      margin: 8px auto 12px;
+    }
+
+    .kitty-head {
+      position: absolute;
+      left: 50%;
+      top: 12px;
+      transform: translateX(-50%);
+      width: 114px;
+      height: 102px;
+      background: #fff;
+      border: 3px solid #333;
+      border-radius: 50%;
+      z-index: 2;
+    }
+
+    .kitty-ear {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: #f9f9f9;
+  border: 4px solid #222;
+  border-radius: 75% 75% 55% 55%;
+  top: 6px;
+  z-index: 2;
+}
+
+.kitty-ear.left {
+  left: 20px;
+  transform: rotate(-18deg);
+}
+
+.kitty-ear.right {
+  right: 20px;
+  transform: rotate(18deg);
+}
+.kitty-ear::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: #ffd3df;
+  border-radius: 50%;
+  top: 7px;
+  left: 7px;
+}
+
+  .kitty-eye {
+  position: absolute;
+  width: 18px;
+  height: 20px;
+  top: 31px;
+  z-index: 5;
+  border-radius: 50%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 35% 28%, #ffffff 0 3px, transparent 7.5px),
+    radial-gradient(circle at 48% 70%, rgba(255,255,255,0.9) 0 3px, transparent 3.5px),
+    #111;
+  box-shadow: inset 0 0 0 2px #f3e8a6;
+}
+
+.kitty-eye.left {
+  left: 16px;
+}
+
+.kitty-eye.right {
+  right: 16px;
+}
+    .kitty-nose {
+      position: absolute;
+      width: 13px;
+      height: 9px;
+      background: #facc15;
+      border: 2px solid #d4a914;
+      border-radius: 50%;
+      left: 50%;
+      top: 46px;
+      transform: translateX(-50%);
+      z-index: 3;
+    }
+
+    .kitty-whisker {
+      position: absolute;
+      width: 22px;
+      height: 2px;
+      background: #333;
+      border-radius: 2px;
+      z-index: 3;
+    }
+
+    .kitty-whisker.w1 { left: 5px; top: 40px; transform: rotate(8deg); }
+    .kitty-whisker.w2 { left: 3px; top: 48px; }
+    .kitty-whisker.w3 { left: 5px; top: 56px; transform: rotate(-8deg); }
+
+    .kitty-whisker.w4 { right: 5px; top: 40px; transform: rotate(-8deg); }
+    .kitty-whisker.w5 { right: 3px; top: 48px; }
+    .kitty-whisker.w6 { right: 5px; top: 56px; transform: rotate(8deg); }
+
+    .kitty-bow {
+      position: absolute;
+      top: 13px;
+      right: 9px;
+      width: 31px;
+      height: 22px;
+      z-index: 5;
+    }
+
+    .kitty-bow::before,
+    .kitty-bow::after {
+      content: "";
+      position: absolute;
+      width: 17px;
+      height: 17px;
+      border: 2px solid rgba(0,0,0,0.18);
+      border-radius: 50% 50% 45% 45%;
+      top: 1px;
+    }
+
+    .kitty-bow::before {
+      left: 0;
+    }
+
+    .kitty-bow::after {
+      right: 0;
+    }
+
+    .kitty-bow span {
+      position: absolute;
+      left: 50%;
+      top: 6px;
+      transform: translateX(-50%);
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.15);
+      z-index: 6;
+    }
+
+    .kitty-bow.pink::before,
+    .kitty-bow.pink::after,
+    .kitty-bow.pink span {
+      background: #f472b6;
+    }
+
+    .kitty-bow.blue::before,
+    .kitty-bow.blue::after,
+    .kitty-bow.blue span {
+      background: #60a5fa;
+    }
+
+    .kitty-bow.orange::before,
+    .kitty-bow.orange::after,
+    .kitty-bow.orange span {
+      background: #fb923c;
+    }
+
+    .kitty-body {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 62px;
+      height: 42px;
+      border-radius: 20px 20px 14px 14px;
+      border: 3px solid #333;
+      z-index: 1;
+    }
+
+    .luna-body {
+      background: #fbcfe8;
+    }
+
+    .pixel-body {
+      background: #bfdbfe;
+    }
+
+    .momo-body {
+      background: #fed7aa;
+    }
+
+    .kitty-badge {
+      position: absolute;
+      left: 50%;
+      bottom: 10px;
+      transform: translateX(-50%);
+      font-size: 19px;
+      z-index: 4;
+    }
+
+    .equipped-icon {
+      position: absolute;
+      top: 0;
+      left: 6px;
+      font-size: 28px;
+      z-index: 7;
+      filter: drop-shadow(0 3px 3px rgba(0,0,0,0.15));
+    }
+
+    .pet-name {
+      font-weight: bold;
+      color: #6d5dfc;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .pet-role {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .pet-outfit {
+      margin: 10px auto 0;
+      text-align: center;
+      font-size: 13px;
+      color: #7c3aed;
+      background: #f5f3ff;
+      border-radius: 999px;
+      padding: 7px 10px;
+      max-width: 240px;
+    }
+    .unequip-btn {
+  display: block;
+  margin: 10px auto 0;
+  border: none;
+  background: #f3e8ff;
+  color: #7c3aed;
+  padding: 7px 13px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: 0.2s;
+}
+
+.unequip-btn:hover {
+  background: #ddd6fe;
+  transform: translateY(-1px);
+}
+
+    .speech {
+      margin-top: 18px;
+      background: #fdf2f8;
+      padding: 16px;
+      border-radius: 18px;
+      color: #555;
+      line-height: 1.7;
+      border: 2px dashed #f9a8d4;
+    }
+
+    .shop-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .shop-item {
+      background: #fffafc;
+      border: 2px solid #fbcfe8;
+      border-radius: 20px;
+      padding: 15px;
+    }
+
+    .shop-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .shop-name {
+      font-weight: bold;
+      color: #6d28d9;
+    }
+
+    .shop-icon {
+      font-size: 24px;
+    }
+
+    .shop-desc {
+      color: #666;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .shop-price {
+      color: #b45309;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .shop-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .shop-actions button {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 11px;
+      cursor: pointer;
+      background: #8b5cf6;
+      color: white;
+      font-size: 12px;
+      transition: 0.2s;
+    }
+
+    .shop-actions button:hover {
+      background: #7c3aed;
+      transform: translateY(-1px);
+    }
+
+    .shop-actions button.owned {
+      background: #10b981;
+    }
+
+    .shop-actions button.disabled {
+      background: #c4c4c4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .encourage {
+      background: linear-gradient(135deg, #eef2ff, #fdf2f8);
+      border-radius: 20px;
+      padding: 20px;
+      line-height: 1.8;
+      color: #555;
+      font-size: 16px;
+    }
+
+    .english-line {
+      font-weight: bold;
+      color: #7c3aed;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    footer {
+      text-align: center;
+      color: #777;
+      padding: 22px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding: 12px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        text-align: center;
+        justify-content: center;
+      }
+
+      .title-box h1 {
+        font-size: 27px;
+      }
+
+      .top-info {
+        justify-content: center;
+      }
+
+      .task-item {
+        grid-template-columns: auto 1fr;
+      }
+
+      .coin-badge {
+        grid-column: 2 / 3;
+        width: fit-content;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header>
+      <div class="title-box">
+        <h1>RadDaily｜影英日计划</h1>
+        <p>
+          给热爱英语、影像科和解剖学的大一女生准备的每日成长 APP。
+          <br />
+          完成任务获得金币，给 Q 版小猫购买装扮，一起陪你学习。
+        </p>
+      </div>
+
+      <div class="top-info">
+        <div class="info-card">
+          <div class="big" id="weekdayText">周一</div>
+          <div class="small" id="dateText">日期</div>
+        </div>
+
+        <div class="info-card">
+          <div class="big"><span id="coinBalance">0</span> 🪙</div>
+          <div class="small">当前金币</div>
+        </div>
+
+        <div class="info-card">
+          <div class="big" id="todayCoinText">0</div>
+          <div class="small">今日已获得金币</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="grid">
+      <section>
+        <div class="card focus-card">
+          <h2>🌟 今日侧重点</h2>
+          <div class="focus-title" id="focusTitle"></div>
+          <p class="focus-desc" id="focusDesc"></p>
+        </div>
+
+        <div class="card">
+          <h2>📋 今日任务</h2>
+          <ul class="task-list" id="taskList"></ul>
+
+          <div class="progress-box">
+            <div class="progress-top">
+              <span>今日完成进度</span>
+              <span id="progressText">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+          </div>
+
+          <button class="reset-btn" onclick="resetToday()">重置今日打卡</button>
+        </div>
+
+        <div class="card">
+          <h2>🩻 今日影像科知识</h2>
+          <div class="knowledge-box">
+            <h3 id="radiologyTitle"></h3>
+            <p id="radiologyContent"></p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>🫀 今日解剖学训练</h2>
+          <div class="knowledge-box">
+            <h3 id="anatomyTitle"></h3>
+            <p id="anatomyContent"></p>
+          </div>
+        </div>
+      </section>
+
+      <aside>
+        <div class="card">
+          <h2>🐱 小猫电子宠物</h2>
+
+          <div class="pets">
+            <div class="pet-card" onclick="talkToCat('luna')">
+              <div class="kitty">
+                <div class="equipped-icon" id="lunaEquipIcon"></div>
+                <div class="kitty-ear left"></div>
+                <div class="kitty-ear right"></div>
+
+                <div class="kitty-head">
+                  <div class="kitty-eye left"></div>
+                  <div class="kitty-eye right"></div>
+                  <div class="kitty-nose"></div>
+
+                  <div class="kitty-whisker w1"></div>
+                  <div class="kitty-whisker w2"></div>
+                  <div class="kitty-whisker w3"></div>
+                  <div class="kitty-whisker w4"></div>
+                  <div class="kitty-whisker w5"></div>
+                  <div class="kitty-whisker w6"></div>
+                </div>
+
+                <div class="kitty-bow pink"><span></span></div>
+                <div class="kitty-body luna-body"></div>
+                <div class="kitty-badge">📘</div>
+              </div>
+
+              <div class="pet-name">Luna 英语猫</div>
+              <div class="pet-role">陪你背单词、练听力、做口语跟读</div>
+              <div class="pet-outfit" id="lunaOutfitText">当前装扮：默认学习猫</div>
+            </div>
+            <button class="unequip-btn" onclick="event.stopPropagation(); unequipItem('luna')">换下装扮</button>
+
+            <div class="pet-card" onclick="talkToCat('pixel')">
+              <div class="kitty">
+                <div class="equipped-icon" id="pixelEquipIcon"></div>
+                <div class="kitty-ear left"></div>
+                <div class="kitty-ear right"></div>
+
+                <div class="kitty-head">
+                  <div class="kitty-eye left"></div>
+                  <div class="kitty-eye right"></div>
+                  <div class="kitty-nose"></div>
+
+                  <div class="kitty-whisker w1"></div>
+                  <div class="kitty-whisker w2"></div>
+                  <div class="kitty-whisker w3"></div>
+                  <div class="kitty-whisker w4"></div>
+                  <div class="kitty-whisker w5"></div>
+                  <div class="kitty-whisker w6"></div>
+                </div>
+
+                <div class="kitty-bow blue"><span></span></div>
+                <div class="kitty-body pixel-body"></div>
+                <div class="kitty-badge">🩻</div>
+              </div>
+
+              <div class="pet-name">Pixel 影像猫</div>
+              <div class="pet-role">陪你认识 X-ray、CT、MRI 和影像科</div>
+              <div class="pet-outfit" id="pixelOutfitText">当前装扮：默认影像猫</div>
+            </div>
+            <button class="unequip-btn" onclick="event.stopPropagation(); unequipItem('pixel')">换下装扮</button>
+
+            <div class="pet-card" onclick="talkToCat('momo')">
+              <div class="kitty">
+                <div class="equipped-icon" id="momoEquipIcon"></div>
+                <div class="kitty-ear left"></div>
+                <div class="kitty-ear right"></div>
+
+                <div class="kitty-head">
+                  <div class="kitty-eye left"></div>
+                  <div class="kitty-eye right"></div>
+                  <div class="kitty-nose"></div>
+
+                  <div class="kitty-whisker w1"></div>
+                  <div class="kitty-whisker w2"></div>
+                  <div class="kitty-whisker w3"></div>
+                  <div class="kitty-whisker w4"></div>
+                  <div class="kitty-whisker w5"></div>
+                  <div class="kitty-whisker w6"></div>
+                </div>
+
+                <div class="kitty-bow orange"><span></span></div>
+                <div class="kitty-body momo-body"></div>
+                <div class="kitty-badge">🫀</div>
+              </div>
+
+              <div class="pet-name">Momo 解剖猫</div>
+              <div class="pet-role">陪你学习身体结构和医学基础</div>
+              <div class="pet-outfit" id="momoOutfitText">当前装扮：默认解剖猫</div>
+            </div>
+          </div>
+          <button class="unequip-btn" onclick="event.stopPropagation(); unequipItem('momo')">换下装扮</button><title>RadDaily｜影英日计划</title>
+
+          <div class="speech" id="catSpeech">
+            早安呀，今天也要一起努力喵！完成任务可以获得金币，然后给小猫买漂亮装扮。
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>🛍️ 小猫换装商店</h2>
+          <div class="shop-grid" id="shopList"></div>
+        </div>
+
+        <div class="card">
+          <h2>📚 今日医学英语词汇</h2>
+          <table class="vocab-table">
+            <thead>
+              <tr>
+                <th>English</th>
+                <th>中文</th>
+              </tr>
+            </thead>
+            <tbody id="vocabTable"></tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h2>💌 今日鼓励</h2>
+          <div class="encourage">
+            <div class="english-line" id="englishLine"></div>
+            <div id="encourageText"></div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      RadDaily｜每天认真一点点，未来就会更接近理想中的自己。
+    </footer>
+  </div>
+
+  <script>
+    const weeklyData = [
+      {
+        dayName: "周日",
+        focusTitle: "轻松成长日",
+        focusDesc: "今天的重点是轻松复习、整理下周目标和恢复精力。休息不是浪费时间，而是为了更稳定地坚持。",
+        tasks: [
+          { text: "轻松复习英语单词 20 个", type: "英语", time: "15 分钟", coins: 35 },
+          { text: "听英文音频并放松跟读", type: "听力", time: "15 分钟", coins: 35 },
+          { text: "整理下周学习目标", type: "计划", time: "20 分钟", coins: 45 },
+          { text: "观看医学或影像科相关短视频", type: "影像科", time: "15 分钟", coins: 35 },
+          { text: "复习 5 个解剖学英文词汇", type: "解剖", time: "10 分钟", coins: 25 },
+          { text: "整理书桌或学习区", type: "生活", time: "15 分钟", coins: 35 },
+          { text: "写下下周最想完成的 3 个目标", type: "复盘", time: "15 分钟", coins: 35 },
+          { text: "做一次轻运动或拉伸", type: "健康", time: "20 分钟", coins: 45 },
+          { text: "睡前自我鼓励 3 句话", type: "鼓励", time: "8 分钟", coins: 20 }
+        ],
+        radiologyTitle: "Ultrasound｜超声",
+        radiologyContent: "Ultrasound uses sound waves to create images of the inside of the body. 超声利用声波形成人体内部图像，常用于腹部、心脏、产科等检查。",
+        anatomyTitle: "Abdomen｜腹部",
+        anatomyContent: "The abdomen contains many important organs, such as the stomach, liver, intestines and kidneys. 腹部包含胃、肝、肠、肾等重要器官。",
+        vocab: [
+          ["Ultrasound", "超声"],
+          ["Abdomen", "腹部"],
+          ["Organ", "器官"],
+          ["Liver", "肝脏"],
+          ["Kidney", "肾脏"],
+          ["Rest", "休息"]
+        ],
+        englishLine: "Rest is also part of growth.",
+        encourage: "休息也是成长的一部分。今天不需要逼自己太紧，只要轻轻复习、认真整理，你仍然在向前走。"
+      },
+      {
+        dayName: "周一",
+        focusTitle: "英语词汇强化日",
+        focusDesc: "今天的重点是扩大英语词汇量，特别是医学英语和基础学术表达。单词是未来阅读医学资料的基础。",
+        tasks: [
+          { text: "背英语单词 40 个", type: "英语", time: "25 分钟", coins: 55 },
+          { text: "复习昨日单词并默写 15 个", type: "英语", time: "15 分钟", coins: 35 },
+          { text: "记忆医学英语词汇 8 个", type: "医学英语", time: "15 分钟", coins: 35 },
+          { text: "用 5 个医学英语单词造句", type: "写作", time: "20 分钟", coins: 45 },
+          { text: "学习 Radiology 基础概念", type: "影像科", time: "20 分钟", coins: 45 },
+          { text: "学习 Spine 脊柱基础知识", type: "解剖", time: "20 分钟", coins: 45 },
+          { text: "听英语音频并记录 5 个表达", type: "听力", time: "15 分钟", coins: 35 },
+          { text: "整理今日课程笔记", type: "学习", time: "15 分钟", coins: 35 },
+          { text: "睡前写 5 句英文日记", type: "写作", time: "10 分钟", coins: 25 }
+        ],
+        radiologyTitle: "Radiology｜影像学",
+        radiologyContent: "Radiology is the medical field that uses images to help diagnose diseases. 影像学是利用医学图像帮助诊断疾病的学科。",
+        anatomyTitle: "Spine｜脊柱",
+        anatomyContent: "The spine supports the body and protects the spinal cord. 脊柱支撑身体，并保护脊髓，是医学影像中非常重要的观察结构。",
+        vocab: [
+          ["Radiology", "影像学"],
+          ["Diagnosis", "诊断"],
+          ["Image", "图像"],
+          ["Spine", "脊柱"],
+          ["Spinal cord", "脊髓"],
+          ["Patient", "病人"]
+        ],
+        englishLine: "Words are the bricks of your future.",
+        encourage: "单词是你未来能力的砖块。今天多记一个词，将来读懂医学资料时就会多一份自信。"
+      },
+      {
+        dayName: "周二",
+        focusTitle: "听力与口语训练日",
+        focusDesc: "今天的重点是敢听、敢说、敢开口。英语不是只靠背出来的，也是在一次次跟读中练出来的。",
+        tasks: [
+          { text: "听 20 分钟英文音频", type: "听力", time: "20 分钟", coins: 45 },
+          { text: "跟读 12 句英文句子", type: "口语", time: "15 分钟", coins: 35 },
+          { text: "录音 1 分钟介绍自己", type: "口语", time: "10 分钟", coins: 25 },
+          { text: "学习 8 个医学英语发音", type: "医学英语", time: "15 分钟", coins: 35 },
+          { text: "学习 X-ray 基础知识", type: "影像科", time: "20 分钟", coins: 45 },
+          { text: "学习 Lung 肺的基础结构", type: "解剖", time: "20 分钟", coins: 45 },
+          { text: "完成一段英文短文朗读", type: "阅读", time: "15 分钟", coins: 35 },
+          { text: "整理今天听不懂的表达", type: "复盘", time: "15 分钟", coins: 35 },
+          { text: "睡前放松拉伸", type: "健康", time: "10 分钟", coins: 25 }
+        ],
+        radiologyTitle: "X-ray｜X 射线",
+        radiologyContent: "X-ray imaging is often used to look at bones and the chest. X 射线检查常用于观察骨骼和胸部，是常见的基础影像检查方式。",
+        anatomyTitle: "Lung｜肺",
+        anatomyContent: "The lungs help us breathe and exchange oxygen and carbon dioxide. 肺帮助我们呼吸，并完成氧气和二氧化碳的交换。",
+        vocab: [
+          ["X-ray", "X 射线"],
+          ["Chest", "胸部"],
+          ["Bone", "骨骼"],
+          ["Lung", "肺"],
+          ["Breathe", "呼吸"],
+          ["Oxygen", "氧气"]
+        ],
+        englishLine: "Practice makes progress.",
+        encourage: "不用害怕自己的发音不完美。真正重要的是你今天开口了，练习了，这就是进步。"
+      },
+      {
+        dayName: "周三",
+        focusTitle: "影像科兴趣日",
+        focusDesc: "今天的重点是了解影像科基础概念。先建立兴趣和框架，不急着学得很深。",
+        tasks: [
+          { text: "学习 X-ray、CT、MRI 的基本区别", type: "影像科", time: "25 分钟", coins: 55 },
+          { text: "记忆 8 个影像科英语词汇", type: "医学英语", time: "15 分钟", coins: 35 },
+          { text: "看一张简单医学影像示意图", type: "观察", time: "15 分钟", coins: 35 },
+          { text: "用中文总结今天的影像知识", type: "复盘", time: "15 分钟", coins: 35 },
+          { text: "学习 CT 基础概念", type: "影像科", time: "20 分钟", coins: 45 },
+          { text: "学习 Brain 大脑基础结构", type: "解剖", time: "20 分钟", coins: 45 },
+          { text: "完成 20 分钟英语阅读", type: "阅读", time: "20 分钟", coins: 45 },
+          { text: "背英语单词 25 个", type: "英语", time: "15 分钟", coins: 35 },
+          { text: "睡前写 3 句英文总结", type: "写作", time: "10 分钟", coins: 25 }
+        ],
+        radiologyTitle: "CT｜Computed Tomography｜计算机断层扫描",
+        radiologyContent: "CT uses X-rays and computers to create cross-sectional images of the body. CT 利用 X 射线和计算机生成身体的断层图像。",
+        anatomyTitle: "Brain｜大脑",
+        anatomyContent: "The brain controls thoughts, memory, movement and many body functions. 大脑控制思维、记忆、运动以及许多身体功能。",
+        vocab: [
+          ["CT", "计算机断层扫描"],
+          ["Computed Tomography", "计算机断层扫描"],
+          ["Cross-section", "断面"],
+          ["Brain", "大脑"],
+          ["Skull", "颅骨"],
+          ["Function", "功能"]
+        ],
+        englishLine: "Every image tells a story.",
+        encourage: "每一张医学影像背后，都藏着身体给医生的信息。你今天学到的基础知识，未来会成为你的专业直觉。"
+      },
+      {
+        dayName: "周四",
+        focusTitle: "解剖学基础日",
+        focusDesc: "今天的重点是认识人体结构。解剖学是医学学习的地基，也是理解影像图像的重要基础。",
+        tasks: [
+          { text: "学习一个人体结构主题", type: "解剖", time: "25 分钟", coins: 55 },
+          { text: "记忆 8 个解剖学英文词汇", type: "医学英语", time: "15 分钟", coins: 35 },
+          { text: "画一个简单人体结构示意图", type: "解剖", time: "20 分钟", coins: 45 },
+          { text: "用英文写一句解剖学知识", type: "写作", time: "10 分钟", coins: 25 },
+          { text: "学习 MRI 基础知识", type: "影像科", time: "20 分钟", coins: 45 },
+          { text: "学习 Heart 心脏基础结构", type: "解剖", time: "20 分钟", coins: 45 },
+          { text: "完成 15 分钟英语口语跟读", type: "口语", time: "15 分钟", coins: 35 },
+          { text: "整理今日课程笔记", type: "学习", time: "15 分钟", coins: 35 },
+          { text: "睡前复盘今日完成情况", type: "复盘", time: "10 分钟", coins: 25 }
+        ],
+        radiologyTitle: "MRI｜Magnetic Resonance Imaging｜磁共振成像",
+        radiologyContent: "MRI uses magnetic fields and radio waves to create detailed images of soft tissues. MRI 利用磁场和无线电波生成软组织的详细图像。",
+        anatomyTitle: "Heart｜心脏",
+        anatomyContent: "The heart pumps blood through the body. 心脏将血液输送到全身，是循环系统的核心器官。",
+        vocab: [
+          ["MRI", "磁共振成像"],
+          ["Soft tissue", "软组织"],
+          ["Heart", "心脏"],
+          ["Blood", "血液"],
+          ["Vessel", "血管"],
+          ["Circulation", "循环"]
+        ],
+        englishLine: "Anatomy is the map of the body.",
+        encourage: "解剖学就像身体的地图。今天认识一个结构，未来看懂一张影像时就会多一分把握。"
+      },
+      {
+        dayName: "周五",
+        focusTitle: "英文阅读日",
+        focusDesc: "今天的重点是阅读英文医学科普内容。阅读会让英语、医学和思维能力一起成长。",
+        tasks: [
+          { text: "阅读一篇英文医学科普短文", type: "阅读", time: "25 分钟", coins: 55 },
+          { text: "标出 10 个不熟悉的单词", type: "英语", time: "15 分钟", coins: 35 },
+          { text: "用中文总结文章 3 句话", type: "复盘", time: "15 分钟", coins: 35 },
+          { text: "用英文写 3 句文章总结", type: "写作", time: "15 分钟", coins: 35 },
+          { text: "学习 Radiologist 影像科医生概念", type: "影像科", time: "20 分钟", coins: 45 },
+          { text: "学习 Stomach 胃的基础结构", type: "解剖", time: "20 分钟", coins: 45 },
+          { text: "复习本周影像科知识", type: "复盘", time: "15 分钟", coins: 35 },
+          { text: "完成 15 分钟听力训练", type: "听力", time: "15 分钟", coins: 35 },
+          { text: "睡前写一句英文鼓励", type: "鼓励", time: "8 分钟", coins: 20 }
+        ],
+        radiologyTitle: "Radiologist｜影像科医生",
+        radiologyContent: "A radiologist is a doctor who interprets medical images and helps diagnose diseases. 影像科医生负责解读医学图像，并帮助临床诊断疾病。",
+        anatomyTitle: "Stomach｜胃",
+        anatomyContent: "The stomach helps digest food. 胃帮助消化食物，是消化系统的重要器官。",
+        vocab: [
+          ["Radiologist", "影像科医生"],
+          ["Interpret", "解读"],
+          ["Medical image", "医学图像"],
+          ["Stomach", "胃"],
+          ["Digest", "消化"],
+          ["System", "系统"]
+        ],
+        englishLine: "Reading opens a new world for you.",
+        encourage: "阅读会为你打开一个新的世界。今天读懂的一小段英文，将来可能就是你理解专业资料的起点。"
+      },
+      {
+        dayName: "周六",
+        focusTitle: "综合复盘日",
+        focusDesc: "今天的重点是回顾本周内容，把零散知识变成自己的知识体系。",
+        tasks: [
+          { text: "复习本周医学英语词汇", type: "医学英语", time: "20 分钟", coins: 45 },
+          { text: "回顾 3 个影像科知识点", type: "影像科", time: "20 分钟", coins: 45 },
+          { text: "回顾 3 个解剖学知识点", type: "解剖", time: "20 分钟", coins: 45 },
+          { text: "写一段英文周总结", type: "写作", time: "20 分钟", coins: 45 },
+          { text: "整理下周想加强的内容", type: "计划", time: "15 分钟", coins: 35 },
+          { text: "复习英语单词 30 个", type: "英语", time: "20 分钟", coins: 45 },
+          { text: "听力训练 15 分钟", type: "听力", time: "15 分钟", coins: 35 },
+          { text: "整理学习资料和笔记", type: "学习", time: "15 分钟", coins: 35 },
+          { text: "睡前完成一周自我鼓励", type: "鼓励", time: "10 分钟", coins: 25 }
+        ],
+        radiologyTitle: "Medical Imaging｜医学影像",
+        radiologyContent: "Medical imaging helps doctors look inside the body without surgery. 医学影像帮助医生在不开刀的情况下观察人体内部结构。",
+        anatomyTitle: "Skeleton｜骨骼系统",
+        anatomyContent: "The skeleton supports the body, protects organs and helps movement. 骨骼系统支撑身体、保护器官，并帮助人体运动。",
+        vocab: [
+          ["Medical imaging", "医学影像"],
+          ["Surgery", "手术"],
+          ["Skeleton", "骨骼系统"],
+          ["Protect", "保护"],
+          ["Movement", "运动"],
+          ["Review", "复习"]
+        ],
+        englishLine: "Review turns effort into strength.",
+        encourage: "复盘会把努力变成真正的能力。你这一周学过的每一点，都在慢慢变成你的底气。"
+      }
+    ];
+
+    const shopItems = [
+      {
+        id: "pink-bow",
+        name: "粉色蝴蝶结",
+        icon: "🎀",
+        price: 300,
+        desc: "普通头饰，适合喜欢甜美风格的小猫。"
+      },
+      {
+        id: "bell-collar",
+        name: "小铃铛项圈",
+        icon: "🔔",
+        price: 350,
+        desc: "走路会叮当响的可爱项圈。"
+      },
+      {
+        id: "star-clip",
+        name: "星星发卡",
+        icon: "⭐",
+        price: 450,
+        desc: "闪闪发光的小发卡，适合努力学习的夜晚。"
+      },
+      {
+        id: "study-glasses",
+        name: "学习眼镜",
+        icon: "👓",
+        price: 500,
+        desc: "戴上后像认真读医学资料的小学霸。"
+      },
+      {
+        id: "academy-dress",
+        name: "英伦学院裙",
+        icon: "👗",
+        price: 600,
+        desc: "适合英语学习日的学院风小裙子。"
+      },
+      {
+        id: "doctor-coat",
+        name: "小医生白大褂",
+        icon: "🥼",
+        price: 700,
+        desc: "影像科梦想必备，小猫也要有医生气质。"
+      },
+      {
+        id: "pink-cape",
+        name: "粉色学习斗篷",
+        icon: "🧣",
+        price: 800,
+        desc: "温暖又可爱，适合冬天陪学。"
+      },
+      {
+        id: "princess-dress",
+        name: "星光公主裙",
+        icon: "✨",
+        price: 1000,
+        desc: "华丽装扮，奖励长期坚持的自己。"
+      },
+      {
+        id: "radiology-set",
+        name: "梦幻影像师套装",
+        icon: "🩻",
+        price: 1200,
+        desc: "最适合影像科主题的小猫高级套装。"
+      }
+    ];
+
+    const catMessages = {
+      luna: [
+        "Luna：Don’t be afraid of English. Practice makes progress 喵！",
+        "Luna：今天多背一个单词，未来就多一点自信喵！",
+        "Luna：Your English is getting better little by little 喵！",
+        "Luna：大胆开口，发音会在练习中慢慢变好喵！"
+      ],
+      pixel: [
+        "Pixel：每一张影像背后，都是一次认真观察喵！",
+        "Pixel：今天又靠近影像科梦想一步了喵！",
+        "Pixel：Let’s see the hidden world inside the body 喵！",
+        "Pixel：X-ray、CT、MRI 都会慢慢变成你的朋友喵！"
+      ],
+      momo: [
+        "Momo：Anatomy is the map of the body 喵！",
+        "Momo：今天认识一个身体结构，未来就多一分医学基础喵！",
+        "Momo：人体结构很复杂，但我们可以一点一点学喵！",
+        "Momo：心脏、肺、脊柱、大脑，都会慢慢被你掌握喵！"
+      ]
+    };
+
+    const today = new Date();
+    const dayIndex = today.getDay();
+    const todayData = weeklyData[dayIndex];
+    const dateKey = today.toISOString().slice(0, 10);
+
+    const taskStateKey = "raddaily-task-states-" + dateKey;
+    const earnedStateKey = "raddaily-earned-states-" + dateKey;
+    const coinKey = "raddaily-total-coins";
+    const ownedKey = "raddaily-owned-items";
+    const equippedKey = "raddaily-equipped-items";
+
+    function getJSON(key, fallback) {
+      const saved = localStorage.getItem(key);
+      if (!saved) return fallback;
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return fallback;
+      }
+    }
+
+    function setJSON(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function getCoins() {
+      return Number(localStorage.getItem(coinKey) || "0");
+    }
+
+    function setCoins(value) {
+      localStorage.setItem(coinKey, String(value));
+    }
+
+    function getTaskStates() {
+      return getJSON(taskStateKey, todayData.tasks.map(() => false));
+    }
+
+    function saveTaskStates(states) {
+      setJSON(taskStateKey, states);
+    }
+
+    function getEarnedStates() {
+      return getJSON(earnedStateKey, todayData.tasks.map(() => false));
+    }
+
+    function saveEarnedStates(states) {
+      setJSON(earnedStateKey, states);
+    }
+
+    function getOwnedItems() {
+      return getJSON(ownedKey, []);
+    }
+
+    function saveOwnedItems(items) {
+      setJSON(ownedKey, items);
+    }
+
+    function getEquippedItems() {
+      return getJSON(equippedKey, {
+        luna: null,
+        pixel: null,
+        momo: null
+      });
+    }
+
+    function saveEquippedItems(items) {
+      setJSON(equippedKey, items);
+    }
+
+    function initPage() {
+      document.getElementById("weekdayText").textContent = todayData.dayName;
+      document.getElementById("dateText").textContent = dateKey;
+
+      document.getElementById("focusTitle").textContent = todayData.focusTitle;
+      document.getElementById("focusDesc").textContent = todayData.focusDesc;
+
+      document.getElementById("radiologyTitle").textContent = todayData.radiologyTitle;
+      document.getElementById("radiologyContent").textContent = todayData.radiologyContent;
+
+      document.getElementById("anatomyTitle").textContent = todayData.anatomyTitle;
+      document.getElementById("anatomyContent").textContent = todayData.anatomyContent;
+
+      document.getElementById("englishLine").textContent = todayData.englishLine;
+      document.getElementById("encourageText").textContent = todayData.encourage;
+
+      renderTasks();
+      renderVocab();
+      renderShop();
+      renderCoins();
+      renderEquippedItems();
+      updateProgress();
+    }
+
+    function renderCoins() {
+      document.getElementById("coinBalance").textContent = getCoins();
+
+      const earnedStates = getEarnedStates();
+      let todayCoins = 0;
+
+      todayData.tasks.forEach((task, index) => {
+        if (earnedStates[index]) {
+          todayCoins += task.coins;
+        }
+      });
+
+      document.getElementById("todayCoinText").textContent = todayCoins + " 🪙";
+    }
+
+    function renderTasks() {
+      const taskList = document.getElementById("taskList");
+      const states = getTaskStates();
+      const earnedStates = getEarnedStates();
+
+      taskList.innerHTML = "";
+
+      todayData.tasks.forEach((task, index) => {
+        const li = document.createElement("li");
+        li.className = "task-item";
+
+        if (states[index]) {
+          li.classList.add("done");
+        }
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = states[index];
+
+        checkbox.addEventListener("change", () => {
+          const currentStates = getTaskStates();
+          const currentEarned = getEarnedStates();
+
+          currentStates[index] = checkbox.checked;
+          saveTaskStates(currentStates);
+
+          if (checkbox.checked) {
+            li.classList.add("done");
+
+            if (!currentEarned[index]) {
+              const newCoins = getCoins() + task.coins;
+              setCoins(newCoins);
+              currentEarned[index] = true;
+              saveEarnedStates(currentEarned);
+
+              document.getElementById("catSpeech").textContent =
+                "三只小猫：任务完成！获得 " + task.coins + " 金币喵！继续坚持可以给我们买漂亮衣服啦！";
+            } else {
+              document.getElementById("catSpeech").textContent =
+                "这项任务今天已经领取过金币啦，但重新完成也很棒喵！";
+            }
+          } else {
+            li.classList.remove("done");
+            document.getElementById("catSpeech").textContent =
+              "取消打卡不会扣金币，但今天这个任务的金币不能重复领取喵。";
+          }
+
+          renderCoins();
+          renderShop();
+          updateProgress();
+        });
+
+        const main = document.createElement("div");
+        main.className = "task-main";
+
+        const title = document.createElement("div");
+        title.className = "task-title";
+        title.textContent = task.text;
+
+        const meta = document.createElement("div");
+        meta.className = "task-meta";
+        meta.innerHTML = `
+          <span class="badge">${task.type}</span>
+          <span class="badge">⏱ ${task.time}</span>
+          <span class="badge">${earnedStates[index] ? "金币已领取" : "可领取金币"}</span>
+        `;
+
+        main.appendChild(title);
+        main.appendChild(meta);
+
+        const coin = document.createElement("div");
+        coin.className = "badge coin-badge";
+        coin.textContent = "+" + task.coins + " 🪙";
+
+        li.appendChild(checkbox);
+        li.appendChild(main);
+        li.appendChild(coin);
+
+        taskList.appendChild(li);
+      });
+    }
+
+    function renderVocab() {
+      const vocabTable = document.getElementById("vocabTable");
+      vocabTable.innerHTML = "";
+
+      todayData.vocab.forEach(item => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${item[0]}</td>
+          <td>${item[1]}</td>
+        `;
+        vocabTable.appendChild(tr);
+      });
+    }
+
+    function updateProgress() {
+      const states = getTaskStates();
+      const doneCount = states.filter(Boolean).length;
+      const total = states.length;
+      const percent = Math.round((doneCount / total) * 100);
+
+      document.getElementById("progressText").textContent = percent + "%";
+      document.getElementById("progressFill").style.width = percent + "%";
+
+      if (percent === 100) {
+        document.getElementById("catSpeech").textContent =
+          "三只小猫：太厉害啦！今天全部任务完成了喵！你已经变得越来越自律啦！";
+      }
+    }
+
+    function renderShop() {
+      const shopList = document.getElementById("shopList");
+      const owned = getOwnedItems();
+      const coins = getCoins();
+
+      shopList.innerHTML = "";
+
+      shopItems.forEach(item => {
+        const isOwned = owned.includes(item.id);
+
+        const div = document.createElement("div");
+        div.className = "shop-item";
+
+        let actionHTML = "";
+
+        if (!isOwned) {
+          const disabled = coins < item.price ? "disabled" : "";
+          actionHTML = `
+            <button class="${disabled}" onclick="buyItem('${item.id}')" ${coins < item.price ? "disabled" : ""}>
+              ${coins < item.price ? "金币不足" : "购买"}
+            </button>
+          `;
+        } else {
+          actionHTML = `
+            <button class="owned" onclick="equipItem('luna', '${item.id}')">给 Luna 穿上</button>
+            <button class="owned" onclick="equipItem('pixel', '${item.id}')">给 Pixel 穿上</button>
+            <button class="owned" onclick="equipItem('momo', '${item.id}')">给 Momo 穿上</button>
+          `;
+        }
+
+        div.innerHTML = `
+          <div class="shop-top">
+            <div class="shop-name">${item.name}</div>
+            <div class="shop-icon">${item.icon}</div>
+          </div>
+          <div class="shop-desc">${item.desc}</div>
+          <div class="shop-price">价格：${item.price} 金币</div>
+          <div class="shop-actions">
+            ${actionHTML}
+          </div>
+        `;
+
+        shopList.appendChild(div);
+      });
+    }
+
+    function buyItem(itemId) {
+      const item = shopItems.find(x => x.id === itemId);
+      if (!item) return;
+
+      const owned = getOwnedItems();
+      const coins = getCoins();
+
+      if (owned.includes(itemId)) {
+        document.getElementById("catSpeech").textContent = "这个装扮已经拥有啦，可以直接给小猫穿上喵！";
+        return;
+      }
+
+      if (coins < item.price) {
+        document.getElementById("catSpeech").textContent =
+          "金币还不够喵！继续完成每日任务，就可以买下这个装扮啦。";
+        return;
+      }
+
+      setCoins(coins - item.price);
+      owned.push(itemId);
+      saveOwnedItems(owned);
+
+      document.getElementById("catSpeech").textContent =
+        "购买成功！获得装扮：" + item.icon + " " + item.name + "。现在可以给小猫穿上啦！";
+
+      renderCoins();
+      renderShop();
+    }
+
+    function equipItem(catName, itemId) {
+      const item = shopItems.find(x => x.id === itemId);
+      if (!item) return;
+
+      const owned = getOwnedItems();
+
+      if (!owned.includes(itemId)) {
+        document.getElementById("catSpeech").textContent = "还没有购买这个装扮喵！";
+        return;
+      }
+
+      const equipped = getEquippedItems();
+      equipped[catName] = itemId;
+      saveEquippedItems(equipped);
+
+      const catDisplay = {
+        luna: "Luna 英语猫",
+        pixel: "Pixel 影像猫",
+        momo: "Momo 解剖猫"
+      };
+
+      document.getElementById("catSpeech").textContent =
+        catDisplay[catName] + " 已经穿上 " + item.icon + " " + item.name + " 啦！";
+
+      renderEquippedItems();
+    }
+    function unequipItem(catName) {
+  const equipped = getEquippedItems();
+  equipped[catName] = null;
+  saveEquippedItems(equipped);
+
+  const catDisplay = {
+    luna: "Luna 英语猫",
+    pixel: "Pixel 影像猫",
+    momo: "Momo 解剖猫"
+  };
+
+  document.getElementById("catSpeech").textContent =
+    catDisplay[catName] + " 已经换下当前装扮，恢复默认样子啦喵！";
+
+  renderEquippedItems();
+}
+
+    function renderEquippedItems() {
+      const equipped = getEquippedItems();
+
+      ["luna", "pixel", "momo"].forEach(catName => {
+        const itemId = equipped[catName];
+        const item = shopItems.find(x => x.id === itemId);
+
+        const iconEl = document.getElementById(catName + "EquipIcon");
+        const textEl = document.getElementById(catName + "OutfitText");
+
+        if (item) {
+          iconEl.textContent = item.icon;
+          textEl.textContent = "当前装扮：" + item.icon + " " + item.name;
+        } else {
+          iconEl.textContent = "";
+          if (catName === "luna") textEl.textContent = "当前装扮：默认学习猫";
+          if (catName === "pixel") textEl.textContent = "当前装扮：默认影像猫";
+          if (catName === "momo") textEl.textContent = "当前装扮：默认解剖猫";
+        }
+      });
+    }
+
+    function talkToCat(catName) {
+      const messages = catMessages[catName];
+      const randomIndex = Math.floor(Math.random() * messages.length);
+      document.getElementById("catSpeech").textContent = messages[randomIndex];
+    }
+
+    function resetToday() {
+      const emptyStates = todayData.tasks.map(() => false);
+      saveTaskStates(emptyStates);
+
+      renderTasks();
+      updateProgress();
+
+      document.getElementById("catSpeech").textContent =
+        "今日打卡状态已经重置啦。注意：已经领取过的金币不会被扣除，也不能重复领取喵！";
+    }
+
+    initPage();
+  </script>
+</body>
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./service-worker.js")
+      .then(() => {
+        console.log("RadDaily service worker registered.");
+      })
+      .catch(error => {
+        console.log("Service worker registration failed:", error);
+      });
+  }
+</script>
+</html>
